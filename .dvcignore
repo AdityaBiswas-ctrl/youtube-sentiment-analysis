@@ -1,0 +1,11 @@
+# DVC ignore patterns
+venv/
+.venv/
+__pycache__/
+*.pyc
+.git/
+mlruns/
+.github/
+tests/
+static/
+*.md
