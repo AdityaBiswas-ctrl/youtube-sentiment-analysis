@@ -1,0 +1,27 @@
+api:
+  host: "0.0.0.0"
+  port: 5000
+  debug: false
+
+paths:
+  raw_data: "data/raw/comments.csv"
+  train_data: "data/processed/train.csv"
+  test_data: "data/processed/test.csv"
+  model: "models/model.pkl"
+  vectorizer: "models/vectorizer.pkl"
+  metrics: "metrics/scores.json"
+  label_encoder: "models/label_encoder.pkl"
+
+sentiment:
+  vader_thresholds:
+    positive: 0.05
+    negative: -0.05
+  labels:
+    - "negative"
+    - "neutral"
+    - "positive"
+
+youtube:
+  api_service_name: "youtube"
+  api_version: "v3"
+  max_results_per_page: 100

@@ -1,0 +1,36 @@
+data:
+  video_ids:
+    - "dQw4w9WgXcQ"
+    - "9bZkp7q19f0"
+    - "kJQP7kiw5Fk"
+  max_comments: 500
+
+preprocess:
+  test_size: 0.2
+  min_length: 5
+  random_state: 42
+
+train:
+  model_type: "xgboost"            # "xgboost" or "lightgbm"
+  max_features: 5000
+  ngram_range: [1, 2]
+  # XGBoost params
+  xgboost:
+    n_estimators: 200
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    eval_metric: "mlogloss"
+  # LightGBM params
+  lightgbm:
+    n_estimators: 200
+    max_depth: -1
+    learning_rate: 0.1
+    num_leaves: 31
+    subsample: 0.8
+    colsample_bytree: 0.8
+
+mlflow:
+  experiment_name: "youtube-sentiment"
+  tracking_uri: "http://localhost:5001"

@@ -1,0 +1,50 @@
+stages:
+  fetch_data:
+    cmd: python -m src.data.fetch_comments
+    deps:
+      - src/data/fetch_comments.py
+      - configs/config.yaml
+    params:
+      - data.video_ids
+      - data.max_comments
+    outs:
+      - data/raw/comments.csv
+
+  preprocess:
+    cmd: python -m src.data.preprocess
+    deps:
+      - src/data/preprocess.py
+      - data/raw/comments.csv
+    params:
+      - preprocess.test_size
+      - preprocess.min_length
+      - preprocess.random_state
+    outs:
+      - data/processed/train.csv
+      - data/processed/test.csv
+
+  train:
+    cmd: python -m src.models.train
+    deps:
+      - src/models/train.py
+      - src/features/build_features.py
+      - data/processed/train.csv
+    params:
+      - train
+    outs:
+      - models/model.pkl
+      - models/vectorizer.pkl
+      - models/label_encoder.pkl
+
+  evaluate:
+    cmd: python -m src.models.evaluate
+    deps:
+      - src/models/evaluate.py
+      - src/features/build_features.py
+      - models/model.pkl
+      - models/vectorizer.pkl
+      - models/label_encoder.pkl
+      - data/processed/test.csv
+    metrics:
+      - metrics/scores.json:
+          cache: false

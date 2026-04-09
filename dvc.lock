@@ -1,0 +1,132 @@
+schema: '2.0'
+stages:
+  fetch_data:
+    cmd: python -m src.data.fetch_comments
+    deps:
+    - path: configs/config.yaml
+      hash: md5
+      md5: 878cd5a13cec7adeff3da7f3507f4f60
+      size: 537
+    - path: src/data/fetch_comments.py
+      hash: md5
+      md5: 35c8847da7cc53c14448b36747921a25
+      size: 5545
+    params:
+      params.yaml:
+        data.max_comments: 500
+        data.video_ids:
+        - dQw4w9WgXcQ
+        - 9bZkp7q19f0
+        - kJQP7kiw5Fk
+    outs:
+    - path: data/raw/comments.csv
+      hash: md5
+      md5: 19e576305a5a2f2d147f98b309db6f71
+      size: 231554
+  preprocess:
+    cmd: python -m src.data.preprocess
+    deps:
+    - path: data/raw/comments.csv
+      hash: md5
+      md5: 19e576305a5a2f2d147f98b309db6f71
+      size: 231554
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: 47b19a50506508b052e578666a8ae01c
+      size: 3564
+    params:
+      params.yaml:
+        preprocess.min_length: 5
+        preprocess.random_state: 42
+        preprocess.test_size: 0.2
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 4f40052b1a68f60e15f1895f1be09f62
+      size: 23668
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 39310afb4e623ce59b799d90e714d682
+      size: 104659
+  train:
+    cmd: python -m src.models.train
+    deps:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 39310afb4e623ce59b799d90e714d682
+      size: 104659
+    - path: src/features/build_features.py
+      hash: md5
+      md5: d24227373d8dc86d576792bc08136580
+      size: 2104
+    - path: src/models/train.py
+      hash: md5
+      md5: 1f2dd732f102f0259636b6e3aada524d
+      size: 5828
+    params:
+      params.yaml:
+        train:
+          model_type: xgboost
+          max_features: 5000
+          ngram_range:
+          - 1
+          - 2
+          xgboost:
+            n_estimators: 200
+            max_depth: 6
+            learning_rate: 0.1
+            subsample: 0.8
+            colsample_bytree: 0.8
+            eval_metric: mlogloss
+          lightgbm:
+            n_estimators: 200
+            max_depth: -1
+            learning_rate: 0.1
+            num_leaves: 31
+            subsample: 0.8
+            colsample_bytree: 0.8
+    outs:
+    - path: models/label_encoder.pkl
+      hash: md5
+      md5: 040b8b782d4d1d20110d537234332d64
+      size: 563
+    - path: models/model.pkl
+      hash: md5
+      md5: 7cc41007d4140be47dfbf329addc5999
+      size: 807475
+    - path: models/vectorizer.pkl
+      hash: md5
+      md5: c8ea9c91abb68c1e752305e7a50dd14f
+      size: 170136
+  evaluate:
+    cmd: python -m src.models.evaluate
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 4f40052b1a68f60e15f1895f1be09f62
+      size: 23668
+    - path: models/label_encoder.pkl
+      hash: md5
+      md5: 040b8b782d4d1d20110d537234332d64
+      size: 563
+    - path: models/model.pkl
+      hash: md5
+      md5: 7cc41007d4140be47dfbf329addc5999
+      size: 807475
+    - path: models/vectorizer.pkl
+      hash: md5
+      md5: c8ea9c91abb68c1e752305e7a50dd14f
+      size: 170136
+    - path: src/features/build_features.py
+      hash: md5
+      md5: d24227373d8dc86d576792bc08136580
+      size: 2104
+    - path: src/models/evaluate.py
+      hash: md5
+      md5: ee8228e5a270156b6391e370234882df
+      size: 4943
+    outs:
+    - path: metrics/scores.json
+      hash: md5
+      md5: c232889f08235833e4cfd5dae54be718
+      size: 814
