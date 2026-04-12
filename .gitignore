@@ -14,8 +14,8 @@ env/
 # DVC
 /data/raw/*.csv
 /data/processed/*.csv
-/models/*.pkl
-/models/*.json
+# /models/*.pkl
+# /models/*.json
 
 # MLflow
 mlruns/
@@ -23,7 +23,7 @@ mlflow.db
 mlartifacts/
 
 # Metrics (tracked by DVC)
-/metrics/
+# /metrics/
 
 # IDE
 .vscode/

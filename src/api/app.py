@@ -349,8 +349,9 @@ load_ml_artifacts()
 
 if __name__ == "__main__":
     config = load_config()
+    port = int(os.environ.get("PORT", config["api"]["port"]))
     app.run(
         host=config["api"]["host"],
-        port=config["api"]["port"],
+        port=port,
         debug=config["api"]["debug"],
     )
