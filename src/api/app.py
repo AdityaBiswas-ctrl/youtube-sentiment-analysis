@@ -162,7 +162,7 @@ def analyze_video():
     Analyze YouTube video comments.
     Expects JSON: { video_url, api_key, max_comments }
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
 
     if not data:
         return jsonify({"error": "No JSON data provided"}), 400
