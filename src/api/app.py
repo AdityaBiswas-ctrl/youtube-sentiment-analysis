@@ -169,7 +169,15 @@ def analyze_video():
 
     video_url = data.get("video_url", "")
     api_key = data.get("api_key", "") or os.environ.get("YOUTUBE_API_KEY", "")
-    max_comments = min(int(data.get("max_comments", 200)), 500)
+    # Safely parse max_comments
+    try:
+        max_comments_val = data.get("max_comments", 200)
+        if not max_comments_val:
+            max_comments = 200
+        else:
+            max_comments = min(int(max_comments_val), 500)
+    except (ValueError, TypeError):
+        max_comments = 200
 
     if not video_url:
         return jsonify({"error": "video_url is required"}), 400
@@ -288,9 +296,15 @@ def analyze_video():
         ]
         for i in range(len(bin_edges) - 1):
             low, high = bin_edges[i], bin_edges[i + 1]
-            count = sum(
-                1 for c in vader_compounds if low <= c < high
-            )
+            # Include 1.0 in the last bin
+            if i == len(bin_edges) - 2:
+                count = sum(
+                    1 for c in vader_compounds if low <= c <= high
+                )
+            else:
+                count = sum(
+                    1 for c in vader_compounds if low <= c < high
+                )
             histogram["bins"].append(f"{low:.1f}")
             histogram["counts"].append(count)
 

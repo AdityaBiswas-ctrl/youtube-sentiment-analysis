@@ -54,10 +54,25 @@ def main():
 
     # Configure MLflow
     tracking_uri = mlflow_params.get("tracking_uri", "mlruns")
-    try:
-        mlflow.set_tracking_uri(tracking_uri)
-    except Exception:
+    
+    # Check if we should use local storage (fallback if remote is localhost and likely unavailable in CI)
+    use_local = False
+    if tracking_uri.startswith("http"):
+        import socket
+        try:
+            # Simple connection check with 2s timeout
+            host = tracking_uri.split("//")[-1].split(":")[0]
+            port = int(tracking_uri.split(":")[-1]) if ":" in tracking_uri.split("//")[-1] else 80
+            with socket.create_connection((host, port), timeout=2):
+                pass
+        except (Exception, socket.timeout):
+            logger.warning(f"Could not connect to MLflow server at {tracking_uri}. Falling back to local 'mlruns'.")
+            use_local = True
+    
+    if use_local:
         mlflow.set_tracking_uri("mlruns")
+    else:
+        mlflow.set_tracking_uri(tracking_uri)
 
     mlflow.set_experiment(mlflow_params["experiment_name"])
 
