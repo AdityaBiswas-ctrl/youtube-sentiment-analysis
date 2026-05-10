@@ -23,6 +23,7 @@ from sklearn.metrics import (
     confusion_matrix,
 )
 
+# pyrefly: ignore [missing-import]
 import mlflow
 
 from src.features.build_features import load_vectorizer, transform_features

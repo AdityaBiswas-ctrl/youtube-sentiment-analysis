@@ -17,8 +17,11 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 
+# pyrefly: ignore [missing-import]
 import mlflow
+# pyrefly: ignore [missing-import]
 import mlflow.sklearn
+# pyrefly: ignore [missing-import]
 import mlflow.xgboost
 
 from src.features.build_features import fit_transform_features, save_vectorizer
@@ -48,6 +51,7 @@ def get_model(model_type: str, params: dict):
     Supports 'xgboost' and 'lightgbm'.
     """
     if model_type == "xgboost":
+        # pyrefly: ignore [missing-import]
         from xgboost import XGBClassifier
         model_params = params["train"]["xgboost"]
         model = XGBClassifier(
@@ -64,6 +68,7 @@ def get_model(model_type: str, params: dict):
         return model, model_params
 
     elif model_type == "lightgbm":
+        # pyrefly: ignore [missing-import]
         from lightgbm import LGBMClassifier
         model_params = params["train"]["lightgbm"]
         model = LGBMClassifier(

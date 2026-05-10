@@ -2,6 +2,7 @@
 Tests for the Flask API endpoints.
 """
 
+# pyrefly: ignore [missing-import]
 import pytest
 import sys
 import os

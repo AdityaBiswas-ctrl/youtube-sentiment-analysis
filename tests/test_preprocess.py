@@ -2,6 +2,7 @@
 Unit tests for the preprocessing module.
 """
 
+# pyrefly: ignore [missing-import]
 import pytest
 import sys
 import os
@@ -93,18 +94,21 @@ class TestLabelAssignment:
     """Tests for VADER label thresholds."""
 
     def test_positive_threshold(self):
+        # pyrefly: ignore [missing-import]
         from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
         analyzer = SentimentIntensityAnalyzer()
         scores = analyzer.polarity_scores("This is absolutely fantastic and wonderful!")
         assert scores["compound"] >= 0.05
 
     def test_negative_threshold(self):
+        # pyrefly: ignore [missing-import]
         from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
         analyzer = SentimentIntensityAnalyzer()
         scores = analyzer.polarity_scores("This is terrible, awful, and disgusting.")
         assert scores["compound"] <= -0.05
 
     def test_neutral_range(self):
+        # pyrefly: ignore [missing-import]
         from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
         analyzer = SentimentIntensityAnalyzer()
         scores = analyzer.polarity_scores("The meeting is at 3pm.")
